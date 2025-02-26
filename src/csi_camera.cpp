@@ -12,9 +12,9 @@ CSICamera::CSICamera(rclcpp::NodeOptions options) : Node("csi_img_publisher", op
     std::string pipeline = getGstreamerPipeline(width_, height_, freq_, flip_method_);
     cap_.open(pipeline, cv::CAP_GSTREAMER);
     
-    std::string ros_namespace = this->get_namespace();
-    std::string ros_name = ros_namespace == "/" ? this->get_name() : std::string("/") + this->get_name();
-    std::string ns_name = ros_namespace + ros_name;
+    std::string node_namespace = this->get_namespace();
+    node_name_ = this->get_name();
+    std::string ns_name = node_namespace + (node_namespace == "/" ? node_name_ : std::string("/") + node_name_);
     img_pub_ = create_publisher<sensor_msgs::msg::Image>(
         ns_name + "/image_raw", 
         rclcpp::QoS(rclcpp::SensorDataQoS())
@@ -38,12 +38,15 @@ CSICamera::CSICamera(rclcpp::NodeOptions options) : Node("csi_img_publisher", op
     // caminfo_pub_->publish(camera_info_msg_);
 
     auto logger = this->get_logger();
+    RCLCPP_INFO(logger, " ");
     RCLCPP_INFO(logger, "width: %d", width_);
     RCLCPP_INFO(logger, "height: %d", height_);
     RCLCPP_INFO(logger, "frequency: %d", freq_);
     RCLCPP_INFO(logger, "flip_method: %d", flip_method_);
-
-
+    RCLCPP_INFO(logger, "Published Topic");
+    RCLCPP_INFO(logger, "  %s", img_pub_->get_topic_name());
+    RCLCPP_INFO(logger, "  %s", compimg_pub_->get_topic_name());
+    
     timer_ = this->create_wall_timer(
         std::chrono::milliseconds(1000/freq_),
         std::bind(&CSICamera::publishImage, this)
@@ -74,6 +77,7 @@ void CSICamera::publishImage()
         cv_img.image = img;
         cv_img.header.stamp.sec = stamp_.seconds();
         cv_img.header.stamp.nanosec = stamp_.nanoseconds();
+        cv_img.header.frame_id = node_name_;
 
         sensor_msgs::msg::Image img_msg;
         cv_img.toImageMsg(img_msg);

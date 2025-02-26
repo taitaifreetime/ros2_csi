@@ -32,4 +32,5 @@ private:
     int flip_method_;
     sensor_msgs::msg::CameraInfo camera_info_msg_;
     rclcpp::Time stamp_;
+    std::string node_name_;
 };
