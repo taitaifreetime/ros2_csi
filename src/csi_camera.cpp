@@ -3,13 +3,13 @@
 
 CSICamera::CSICamera(rclcpp::NodeOptions options) : Node("csi_img_publisher", options)
 {
-
+    cam_id_ = ros2_cpp_utils::utils::getRosParam<int>(this, "cam_id", 0);
     width_ = ros2_cpp_utils::utils::getRosParam<int>(this, "width", 1280);
     height_ = ros2_cpp_utils::utils::getRosParam<int>(this, "height", 720);
     freq_ = ros2_cpp_utils::utils::getRosParam<int>(this, "frequency", 60);
     flip_method_ = ros2_cpp_utils::utils::getRosParam<int>(this, "flip_method", 0);
 
-    std::string pipeline = getGstreamerPipeline(width_, height_, freq_, flip_method_);
+    std::string pipeline = getGstreamerPipeline(cam_id_, width_, height_, freq_, flip_method_);
     cap_.open(pipeline, cv::CAP_GSTREAMER);
     
     std::string node_namespace = this->get_namespace();
@@ -55,9 +55,9 @@ CSICamera::CSICamera(rclcpp::NodeOptions options) : Node("csi_img_publisher", op
 
 CSICamera::~CSICamera(){}
 
-std::string CSICamera::getGstreamerPipeline(const int width, const int height, const int freq, const int flip_method)
+std::string CSICamera::getGstreamerPipeline(const int cam_id, const int width, const int height, const int freq, const int flip_method)
 {
-    return "nvarguscamerasrc sensor-id=0 ! video/x-raw(memory:NVMM), width=(int)" + std::to_string(width) + ", height=(int)" +
+    return "nvarguscamerasrc sensor-id=" + std::to_string(cam_id) + " ! video/x-raw(memory:NVMM), width=(int)" + std::to_string(width) + ", height=(int)" +
            std::to_string(height) + ", framerate=(fraction)" + std::to_string(freq) +
            "/1 ! nvvidconv flip-method=" + std::to_string(flip_method) + " ! video/x-raw, width=(int)" + std::to_string(width) + ", height=(int)" +
            std::to_string(height) + ", format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink";

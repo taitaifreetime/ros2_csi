@@ -18,7 +18,7 @@ public:
     ~CSICamera();
 
 private:
-    std::string getGstreamerPipeline(const int width, const int height, const int freq, const int flip_method);
+    std::string getGstreamerPipeline(const int cam_id, const int width, const int height, const int freq, const int flip_method);
     void publishImage();
     rclcpp::TimerBase::SharedPtr timer_;
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr img_pub_;
@@ -30,6 +30,7 @@ private:
     int width_, height_;
     int freq_;
     int flip_method_;
+    int cam_id_;
     sensor_msgs::msg::CameraInfo camera_info_msg_;
     rclcpp::Time stamp_;
     std::string node_name_;
