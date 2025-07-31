@@ -1,13 +1,13 @@
 image_width: 1920
 image_height: 1080
-camera_name: csi1
+camera_name: csi0
 camera_matrix:
   rows: 3
   cols: 3
   data: [ 2,     0,   2,
           0.,     2,  2,
           0.,     0.,   1.    ]
-camera_model: plumb_bob
+distortion_model: plumb_bob
 distortion_coefficients:
   rows: 1
   cols: 5

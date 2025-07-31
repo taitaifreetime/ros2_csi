@@ -24,7 +24,7 @@ private:
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr img_pub_;
     rclcpp::Publisher<sensor_msgs::msg::CompressedImage>::SharedPtr compimg_pub_;
     std::shared_ptr<camera_info_manager::CameraInfoManager> camera_info_manager_;
-    rclcpp::Publisher<sensor_msgs::msg::CameraInfo>::SharedPtr caminfo_pub_;
+    rclcpp::Publisher<sensor_msgs::msg::CameraInfo>::SharedPtr camera_info_pub_;
     cv::VideoCapture cap_;
 
     int width_, height_;
