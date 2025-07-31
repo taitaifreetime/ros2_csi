@@ -27,7 +27,7 @@ set(dependencies
   camera_info_manager
 )
 install(
-  DIRECTORY include/
+  DIRECTORY include/ 
   DESTINATION include
 )
 
@@ -39,6 +39,10 @@ ament_target_dependencies(csi_camera_node ${dependencies})
 install(TARGETS
   csi_camera_node
   DESTINATION lib/${PROJECT_NAME}
+)
+install(
+  DIRECTORY launch config
+  DESTINATION share/${PROJECT_NAME}
 )
 
 

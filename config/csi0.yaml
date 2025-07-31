@@ -1,0 +1,8 @@
+camera:
+  csi0:
+    ros__parameters:
+      'cam_id': 0
+      'width': 1280 
+      'height': 720 
+      'frequency': 60 
+      'flip_method': 0 
